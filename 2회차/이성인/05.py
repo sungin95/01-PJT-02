@@ -1,11 +1,42 @@
 import requests
 from pprint import pprint
+from dotenv import load_dotenv
+import os
+os.environ.get("API")
+load_dotenv()
+
 
 
 def credits(title):
-    pass 
-    # 여기에 코드를 작성합니다.  
+    BASE_url = "https://api.themoviedb.org/3"
+    path = f'/search/movie'
+    params = {
+        'api_key': os.environ.get("API") , 
+        'language': 'ko-KR',
+        'query' : f"{title}"
+    } 
+    dict_people = {}
+    response = requests.get(BASE_url + path, params=params).json()
+    movies = response.get('results')
+    if movies != []:
+        id_ = movies[0].get ('id')
+        path = f'/movie/{id_}/credits'
+        response2 = requests.get(BASE_url + path, params=params).json()
+        list1 = []
+        list2 = []
+        casts = response2.get('cast')
+        for cast in casts:
+            if cast.get('cast_id') < 10:
+                list1.append(cast.get('name'))
 
+        crews = response2.get('crew')
+        for crew in crews:
+            if crew.get('department') == "Directing" :
+                list2.append(crew.get('name'))
+        dict_people["cast"] = list1
+        dict_people["crew"] = list2
+
+    return dict_people
 
 # 아래의 코드는 수정하지 않습니다.
 if __name__ == '__main__':

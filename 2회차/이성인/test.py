@@ -1,17 +1,13 @@
-from concurrent.futures import process
 import requests
 from pprint import pprint
-from dotenv import load_dotenv
-import os
-load_dotenv()
 
 
 def recommendation(title):
 
     BASE_url = "https://api.themoviedb.org/3"
-    path = f'/search/movie'
+    path = f'/crew/cast'
     params = {
-        'api_key':os.environ.get("API"),
+        'api_key':'4b652431614ec1d54ffc88928033f024',
         'language': 'ko-KR',
         'query' : f"{title}"
     }

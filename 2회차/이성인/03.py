@@ -1,10 +1,33 @@
 import requests
 from pprint import pprint
-
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 def ranking():
-    pass 
-    # 여기에 코드를 작성합니다.  
+    movies_condition = "popular"
+    BASE_url = "https://api.themoviedb.org/3"
+    path = f'/movie/{movies_condition}'
+    params = {
+        'api_key':os.environ.get("API"),
+        'language': 'ko-KR'
+    }
+    top_5 = []
+    select_movies = []
+    response = requests.get(BASE_url + path, params=params).json()
+    movies = response.get('results') 
+    for movie in movies:
+        top_5.append(movie.get('vote_average'))
+    top_5.sort()
+    top_5 = (top_5[-5:])
+    cnt = 0
+    for movie in movies:
+        if (movie.get('vote_average')) in top_5:
+            select_movies.append(movie)
+            cnt += 1
+            if cnt == 5:    # 평점이 겹치면 6개가 출력이 될수 있어서 만들었습니다. 
+                break
+    return select_movies 
 
 
 # 아래의 코드는 수정하지 않습니다.
